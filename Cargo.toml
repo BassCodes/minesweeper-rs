@@ -1,0 +1,18 @@
+[package]
+name = "minesweeper"
+authors = ["Alexander Bass"]
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+image = { version = "0.24.6", default-features = false, features = ["png"] }
+
+macroquad = { version = "0.3.25", default-features = false, features = [
+    # Audio is not needed for this, but a bug in Macroquad requires that the audio feature is present, else crash.
+    "audio",
+] }
+
+[profile.release]
+lto = true
+strip = true
+# codegen-units = 1 # Reduce number of codegen units to increase optimizations
