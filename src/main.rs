@@ -1,7 +1,6 @@
 use gui::top_menu::smile::SmileyState;
-use gui::ui_event::*;
-use gui::{GameUI, UIState};
-use logic::{events::GameEvent, Minesweeper};
+use gui::{GUIEvent, GameUI, UIState};
+use logic::{GameEvent, Minesweeper};
 use macroquad::{
 	prelude::*,
 	ui::{root_ui, Skin},

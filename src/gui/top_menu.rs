@@ -7,15 +7,11 @@ pub mod flag_counter;
 pub mod smile;
 pub mod timer;
 
-use crate::logic::Minesweeper;
+use crate::{gui::GUIEvent, logic::Minesweeper, util::Events};
 
 use self::{flag_counter::GUIFlagCounter, smile::GUISmile, timer::GUITimer};
 
-use super::{
-	texture_store::TextureStore,
-	ui_event::{GUIEvent, GUIEvents},
-	UIState,
-};
+use super::{texture_store::TextureStore, UIState};
 use macroquad::prelude::*;
 #[derive(Default)]
 pub struct GUITop {
@@ -29,7 +25,7 @@ impl GUITop {
 		&mut self,
 		ui_state: &UIState,
 		game_logic: &Minesweeper,
-		event_handler: &mut GUIEvents,
+		event_handler: &mut Events<GUIEvent>,
 		textures: &TextureStore,
 	) {
 		let background_color = Color::from_rgba(192, 192, 192, 255);

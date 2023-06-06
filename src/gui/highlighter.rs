@@ -5,10 +5,11 @@ use crate::{
 		game_board::GameBoard,
 		tile::{TileModifier, TileState},
 	},
+	util::Events,
 	util::{ADJACENT_WITHOUT_CENTER, ADJACENT_WITH_CENTER},
 };
 
-use super::{top_menu::smile::SmileyState, ui_event::GUIEvent, ui_event::GUIEvents, UIState};
+use super::{top_menu::smile::SmileyState, GUIEvent, UIState};
 use macroquad::prelude::*;
 use std::default;
 
@@ -26,7 +27,7 @@ pub enum Highlight {
 }
 
 impl Highlighter {
-	pub fn events(&mut self, ui_state: &UIState, event_handler: &mut GUIEvents, game_board: &mut GameBoard) {
+	pub fn events(&mut self, ui_state: &UIState, event_handler: &mut Events<GUIEvent>, game_board: &mut GameBoard) {
 		if !ui_state.frozen && ui_state.mouse_in_minefield {
 			if is_mouse_button_pressed(MouseButton::Left) {
 				self.highlight = Highlight::Normal;
@@ -49,7 +50,7 @@ impl Highlighter {
 			}
 		}
 	}
-	fn check_reveal(&self, event_handler: &mut GUIEvents, interface: &UIState, game_board: &mut GameBoard) {
+	fn check_reveal(&self, event_handler: &mut Events<GUIEvent>, interface: &UIState, game_board: &mut GameBoard) {
 		let (x, y) = interface.cursor;
 		if let Some(tile) = game_board.get_tile_mut(x, y) {
 			let adjacent_mines = tile.adjacent;
@@ -87,7 +88,7 @@ impl Highlighter {
 			}
 		}
 	}
-	pub fn highlight(&mut self, interface: &UIState, event_handler: &mut GUIEvents) {
+	pub fn highlight(&mut self, interface: &UIState, event_handler: &mut Events<GUIEvent>) {
 		if interface.frozen {
 			return;
 		}
@@ -119,7 +120,7 @@ impl Highlighter {
 		self.move_highlight(&interface, event_handler);
 	}
 
-	fn move_highlight(&mut self, interface: &UIState, event_handler: &mut GUIEvents) {
+	fn move_highlight(&mut self, interface: &UIState, event_handler: &mut Events<GUIEvent>) {
 		if let Some((old_x, old_y)) = self.cursor_old {
 			match self.highlight {
 				Highlight::None => (),
@@ -165,7 +166,7 @@ impl Highlighter {
 		self.cursor_old = Some(interface.cursor);
 	}
 
-	fn reset_highlight(&mut self, interface: &UIState, event_handler: &mut GUIEvents) {
+	fn reset_highlight(&mut self, interface: &UIState, event_handler: &mut Events<GUIEvent>) {
 		if let Some((x, y)) = self.cursor_old {
 			match self.highlight {
 				Highlight::None => (),

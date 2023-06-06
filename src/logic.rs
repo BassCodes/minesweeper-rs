@@ -1,11 +1,10 @@
-pub mod events;
+// pub mod events;
 pub mod game_board;
 pub mod tile;
 mod timer;
-use self::{
-	events::{Events, GameEvent},
-	timer::Timer,
-};
+use crate::util::Events;
+
+use self::{tile::Tile, timer::Timer};
 use game_board::GameBoard;
 use std::error::Error;
 
@@ -17,13 +16,25 @@ pub enum GameState {
 	GameOver,
 	Victory,
 }
+pub enum GameEvent {
+	Lose(usize, usize, Tile),
+	RevealTile(usize, usize, Tile),
+	FlagTile(usize, usize, Tile),
+	QuestionTile(usize, usize, Tile),
+	SweepDone,
+	SweepBegin,
+	InitDone,
+	Win,
+	Reset,
+	GameEnd(GameBoard),
+}
 
 #[derive(Default)]
 pub struct Minesweeper {
 	pub board: GameBoard,
+	pub events: Events<GameEvent>,
 	pub state: GameState,
 	timer: Timer,
-	pub events: Events,
 }
 
 impl Minesweeper {

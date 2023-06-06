@@ -98,7 +98,7 @@ impl GameBoard {
 		self.mines as isize - self.flags as isize
 	}
 
-	pub fn modify(&mut self, x: usize, y: usize, event_handler: &mut Events) {
+	pub fn modify(&mut self, x: usize, y: usize, event_handler: &mut Events<GameEvent>) {
 		if let Some(&tile) = &self.get_tile(x, y) {
 			if tile.swept {
 				return;
@@ -132,7 +132,7 @@ impl GameBoard {
 		}
 	}
 
-	pub fn sweep(&mut self, x: usize, y: usize, event_handler: &mut Events) -> Option<GameState> {
+	pub fn sweep(&mut self, x: usize, y: usize, event_handler: &mut Events<GameEvent>) -> Option<GameState> {
 		if let BoardState::Ungenerated = self.state {
 			self.generate(x, y);
 		}

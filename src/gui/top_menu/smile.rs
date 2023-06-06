@@ -3,9 +3,9 @@ use macroquad::{
 	ui::{widgets, Ui},
 };
 
-use crate::gui::{
-	texture_store::TextureStore,
-	ui_event::{GUIEvent, GUIEvents},
+use crate::{
+	gui::{texture_store::TextureStore, GUIEvent},
+	util::Events,
 };
 
 use super::UIState;
@@ -34,7 +34,7 @@ const WIDTH: usize = 70;
 const HEIGHT: usize = 70;
 
 impl GUISmile {
-	pub fn render(&mut self, ui_state: &UIState, ui: &mut Ui, event_handler: &mut GUIEvents, textures: &TextureStore) {
+	pub fn render(&mut self, ui_state: &UIState, ui: &mut Ui, event_handler: &mut Events<GUIEvent>, textures: &TextureStore) {
 		let top_height = ui_state.top_offset;
 		let top_width = ui_state.width * ui_state.tile_size;
 		let pos_x = (top_width - HEIGHT) / 2;

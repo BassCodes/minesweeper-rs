@@ -4,10 +4,14 @@ pub mod settings_menu;
 pub mod texture_store;
 mod tile_render;
 pub mod top_menu;
-pub mod ui_event;
+
+use crate::{logic::game_board::ModifyMode, util::Events};
 
 use self::{
-	highlighter::Highlighter, settings_menu::SettingsMenu, texture_store::TextureStore, top_menu::GUITop, ui_event::GUIEvents,
+	highlighter::Highlighter,
+	settings_menu::SettingsMenu,
+	texture_store::TextureStore,
+	top_menu::{smile::SmileyState, GUITop},
 };
 use macroquad::prelude::*;
 #[derive(Default, Copy, Clone, Debug)]
@@ -16,6 +20,21 @@ pub enum Language {
 	English,
 	Japanese,
 }
+
+pub enum GUIEvent {
+	ClickReset,
+	OpenSettings,
+	CloseSettings,
+	SwitchLanguage(Language),
+	ClickTile(usize, usize),
+	ModifyTile(usize, usize),
+	HighlightTile(usize, usize),
+	UnHighlightTile(usize, usize),
+	CreateNewGame(usize, usize, usize),
+	SetQuestionMode(ModifyMode),
+	SetSmileyState(SmileyState),
+}
+
 #[derive(Debug, Default)]
 pub struct UIState {
 	pub width: usize,
@@ -85,7 +104,7 @@ impl UIState {
 
 #[derive(Default)]
 pub struct GameUI {
-	pub event_handler: GUIEvents,
+	pub event_handler: Events<GUIEvent>,
 	pub highlighter: Highlighter,
 	pub state: UIState,
 	pub settings_menu: SettingsMenu,

@@ -1,10 +1,6 @@
-use crate::logic::game_board::ModifyMode;
+use crate::{logic::game_board::ModifyMode, util::Events};
 
-use super::{
-	texture_store::TextureStore,
-	ui_event::{GUIEvent, GUIEvents},
-	Language, UIState,
-};
+use super::{texture_store::TextureStore, GUIEvent, Language, UIState};
 use macroquad::{
 	hash,
 	prelude::*,
@@ -32,7 +28,7 @@ impl SettingsMenu {
 	pub fn render(
 		&mut self,
 		ui_state: &UIState,
-		event_handler: &mut GUIEvents,
+		event_handler: &mut Events<GUIEvent>,
 		textures: &TextureStore,
 		skin: &Skin,
 		exit_button_skin: &Skin,
@@ -53,7 +49,7 @@ impl SettingsMenu {
 			const MIN_MINEFIELD_WIDTH: usize = 5;
 			const MAX_MINEFIELD_WIDTH: usize = 100;
 			const MIN_MINEFIELD_HEIGHT: usize = 5;
-			const MAX_MINEFIELD_HEIGHT: usize = 100;
+			// const MAX_MINEFIELD_HEIGHT: usize = 100;
 			render_counter(
 				&mut self.width,
 				ui,

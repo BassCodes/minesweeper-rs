@@ -1,7 +1,7 @@
-use crate::logic::game_board::GameBoard;
+use crate::{logic::game_board::GameBoard, util::Events};
 use macroquad::prelude::*;
 
-use super::{texture_store::TextureStore, ui_event::GUIEvents, UIState};
+use super::{texture_store::TextureStore, GUIEvent, UIState};
 impl GameBoard {
 	pub fn render(&self, textures: &TextureStore, settings: &UIState) {
 		// dbg!(&settings.top_offset, &settings.render_scale);
@@ -32,13 +32,13 @@ impl GameBoard {
 			}
 		}
 	}
-	pub fn events(&self, settings: &UIState, event_handler: &mut GUIEvents) {
+	pub fn events(&self, settings: &UIState, event_handler: &mut Events<GUIEvent>) {
 		if settings.mouse_in_minefield && !settings.frozen {
 			if is_mouse_button_released(MouseButton::Left) {
-				event_handler.add(super::ui_event::GUIEvent::ClickTile(settings.cursor.0, settings.cursor.1))
+				event_handler.add(GUIEvent::ClickTile(settings.cursor.0, settings.cursor.1))
 			}
 			if is_mouse_button_released(MouseButton::Right) {
-				event_handler.add(super::ui_event::GUIEvent::ModifyTile(settings.cursor.0, settings.cursor.1))
+				event_handler.add(GUIEvent::ModifyTile(settings.cursor.0, settings.cursor.1))
 			}
 		}
 	}
