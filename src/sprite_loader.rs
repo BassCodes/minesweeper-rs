@@ -2,13 +2,11 @@ use std::error::Error;
 
 use image::{load_from_memory, EncodableLayout};
 use macroquad::texture::{FilterMode, Texture2D};
-pub fn load_sprites(bytes: &[u8], tile_size: [usize; 2], rows: usize, columns: usize) -> Result<Vec<Texture2D>, Box<dyn Error>> {
+pub fn load_sprites(bytes: &[u8], tile_size: (u32, u32), rows: usize, columns: usize) -> Result<Vec<Texture2D>, Box<dyn Error>> {
 	let sprite_sheet = load_from_memory(bytes)?.to_rgba8();
 
 	let mut sprite_list: Vec<Texture2D> = vec![];
-	let [tile_width, tile_height] = tile_size;
-	let tile_width = tile_width as u32;
-	let tile_height = tile_height as u32;
+	let (tile_width, tile_height) = tile_size;
 
 	for i in 0..(rows * columns) {
 		let x = (i % columns) as u32;

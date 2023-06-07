@@ -1,11 +1,23 @@
 use crate::{logic::game_board::ModifyMode, util::Events};
 
-use super::{texture_store::TextureStore, GUIEvent, Language, UIState};
+use super::{seven_segment::draw_seven_segment_unscaled, texture_store::TextureStore, GUIEvent, Language, UIState};
 use macroquad::{
 	hash,
 	prelude::*,
 	ui::{root_ui, widgets, Skin, Ui},
 };
+
+const NEW_GAME_HEIGHT: f32 = 40f32;
+const NEW_GAME_WIDTH: f32 = 250f32;
+const BUTTON_MENU_WIDTH: f32 = 250f32;
+const BUTTON_SIZE: f32 = 100f32;
+const BUTTON_MENU_Y: f32 = 400f32;
+const BUTTON_MENU_LABEL_HEIGHT: f32 = 20f32;
+
+const MIN_MINEFIELD_WIDTH: usize = 5;
+const MAX_MINEFIELD_WIDTH: usize = 100;
+const MIN_MINEFIELD_HEIGHT: usize = 5;
+const MAX_MINEFIELD_HEIGHT: usize = 100;
 
 pub struct SettingsMenu {
 	mines: usize,
@@ -46,16 +58,13 @@ impl SettingsMenu {
 			ui.pop_skin();
 			ui.push_skin(&skin);
 			let half_screen_width = screen_width * 0.5;
-			const MIN_MINEFIELD_WIDTH: usize = 5;
-			const MAX_MINEFIELD_WIDTH: usize = 100;
-			const MIN_MINEFIELD_HEIGHT: usize = 5;
-			// const MAX_MINEFIELD_HEIGHT: usize = 100;
+
 			render_counter(
 				&mut self.width,
 				ui,
 				&textures,
 				vec2(half_screen_width, 100f32),
-				String::from("Minefield Width"),
+				"Minefield Width",
 				MIN_MINEFIELD_WIDTH,
 				MAX_MINEFIELD_WIDTH,
 			);
@@ -64,21 +73,19 @@ impl SettingsMenu {
 				ui,
 				&textures,
 				vec2(half_screen_width, 200f32),
-				String::from("Minefield Height"),
-				MIN_MINEFIELD_WIDTH,
+				"Minefield Height",
 				MIN_MINEFIELD_HEIGHT,
+				MAX_MINEFIELD_HEIGHT,
 			);
 			render_counter(
 				&mut self.mines,
 				ui,
 				&textures,
 				vec2(half_screen_width, 300f32),
-				String::from("Mines"),
+				"Mines",
 				1,
 				self.width * self.height - 10,
 			);
-			const NEW_GAME_HEIGHT: f32 = 40f32;
-			const NEW_GAME_WIDTH: f32 = 250f32;
 			if widgets::Button::new("New Game")
 				.size(vec2(NEW_GAME_WIDTH, NEW_GAME_HEIGHT))
 				.position(vec2((screen_width - NEW_GAME_WIDTH) * 0.5, 0.0))
@@ -87,12 +94,9 @@ impl SettingsMenu {
 				event_handler.add(GUIEvent::CreateNewGame(self.width, self.height, self.mines));
 				event_handler.add(GUIEvent::CloseSettings);
 			}
-			const BUTTON_MENU_WIDTH: f32 = 250f32;
 			let language_button_x = (screen_width - BUTTON_MENU_WIDTH) * 0.5;
-			const BUTTON_SIZE: f32 = 100f32;
-			const BUTTON_MENU_Y: f32 = 400f32;
 			let question_button_x = (screen_width - BUTTON_MENU_WIDTH) * 0.5 + (BUTTON_MENU_WIDTH - BUTTON_SIZE);
-			const BUTTON_MENU_LABEL_HEIGHT: f32 = 20f32;
+
 			widgets::Label::new("Language")
 				.position(vec2(language_button_x, BUTTON_MENU_Y - BUTTON_MENU_LABEL_HEIGHT))
 				.size(vec2(BUTTON_SIZE, BUTTON_MENU_LABEL_HEIGHT))
@@ -141,36 +145,23 @@ impl SettingsMenu {
 	}
 }
 
-fn render_counter(
-	count: &mut usize,
-	ui: &mut Ui,
-	textures: &TextureStore,
-	position: Vec2,
-	title: String,
-	min: usize,
-	max: usize,
-) {
+const COUNTER_DIGIT_WIDTH: f32 = 13f32 * 2.0;
+const COUNTER_DIGIT_HEIGHT: f32 = 23f32 * 2.0;
+const COUNTER_BUTTON_HEIGHT: f32 = 30f32;
+const COUNTER_BUTTON_MARGIN: f32 = 10f32;
+const BUTTON_OFFSET_HEIGHT: f32 = (COUNTER_DIGIT_HEIGHT - COUNTER_BUTTON_HEIGHT) * 0.5;
+
+fn render_counter(count: &mut usize, ui: &mut Ui, textures: &TextureStore, position: Vec2, title: &str, min: usize, max: usize) {
 	let digits: Vec<usize> = {
 		let digits = count.to_string();
 		let digits = format!("{:0>3}", digits);
 		digits.chars().map(|i| (i.to_digit(10u32).unwrap_or(0)) as usize).collect()
 	};
 
-	const COUNTER_DIGIT_WIDTH: f32 = 13f32 * 2.0;
-	const COUNTER_DIGIT_HEIGHT: f32 = 23f32 * 2.0;
-	const COUNTER_BUTTON_HEIGHT: f32 = 30f32;
-	const COUNTER_BUTTON_MARGIN: f32 = 10f32;
-	const BUTTON_OFFSET_HEIGHT: f32 = (COUNTER_DIGIT_HEIGHT - COUNTER_BUTTON_HEIGHT) * 0.5;
-
 	let counter_width = digits.len() as f32 * COUNTER_DIGIT_WIDTH;
 	let position = position - vec2(counter_width * 0.5, 0.0);
-	for (x, digit) in digits.iter().enumerate() {
-		let position = vec2(COUNTER_DIGIT_WIDTH * x as f32, 0f32) + position;
-		widgets::Texture::new(textures.numbers[*digit])
-			.size(COUNTER_DIGIT_WIDTH, COUNTER_DIGIT_HEIGHT)
-			.position(position)
-			.ui(ui);
-	}
+
+	draw_seven_segment_unscaled(ui, textures, &digits, position.x as usize, position.y as usize);
 	if widgets::Button::new("+")
 		.size(vec2(COUNTER_BUTTON_HEIGHT, COUNTER_BUTTON_HEIGHT))
 		.position(position + vec2(counter_width + COUNTER_BUTTON_MARGIN, BUTTON_OFFSET_HEIGHT))

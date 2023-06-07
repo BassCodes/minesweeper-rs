@@ -159,26 +159,28 @@ impl GameBoard {
 		let mut revealed: usize = 0;
 		while scan_list.len() > 0 {
 			for &scan_location in ADJACENT_WITHOUT_CENTER.iter() {
-				if let Some(old_tile) = self.get_tile(scan_list[0].0, scan_list[0].1) {
-					if old_tile.adjacent > 0 {
-						continue;
-					}
-					let x = scan_list[0].0 as isize + scan_location.0;
-					let y = scan_list[0].1 as isize + scan_location.1;
-
-					if x < 0 || y < 0 {
-						continue;
-					}
-					let y = y as usize;
-					let x = x as usize;
-					if let Some(tile) = self.get_tile_mut(x, y) {
-						if tile.swept {
+				if let Some((x, y)) = scan_list.front() {
+					if let Some(old_tile) = self.get_tile(*x, *y) {
+						if old_tile.adjacent > 0 {
 							continue;
 						}
-						scan_list.push_back((x, y));
-						tile.swept = true;
-						revealed += 1;
-						event_handler.add(GameEvent::RevealTile(x, y, tile.clone()));
+						let x = *x as isize + scan_location.0;
+						let y = *y as isize + scan_location.1;
+
+						if x < 0 || y < 0 {
+							continue;
+						}
+						let y = y as usize;
+						let x = x as usize;
+						if let Some(tile) = self.get_tile_mut(x, y) {
+							if tile.swept {
+								continue;
+							}
+							scan_list.push_back((x, y));
+							tile.swept = true;
+							revealed += 1;
+							event_handler.add(GameEvent::RevealTile(x, y, tile.clone()));
+						}
 					}
 				}
 			}

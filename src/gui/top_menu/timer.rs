@@ -1,9 +1,9 @@
-use macroquad::{
-	prelude::*,
-	ui::{widgets, Ui},
-};
+use macroquad::{prelude::*, ui::Ui};
 
-use crate::gui::texture_store::TextureStore;
+use crate::gui::{
+	seven_segment::{self, draw_seven_segment},
+	texture_store::TextureStore,
+};
 
 use super::UIState;
 
@@ -31,18 +31,15 @@ impl GUITimer {
 			let digits: Vec<usize> = time_1.chars().map(|i| (i.to_digit(10u32).unwrap_or(0)) as usize).collect();
 			self.digits = digits;
 		}
-		let top = ui_state.top_offset;
-		const WIDTH: usize = 13 * 2;
-		const HEIGHT: usize = 23 * 2;
-		let (scaled_width, scaled_height) = ui_state.pixel_screen_scale(WIDTH as usize, HEIGHT);
 		let board_width = ui_state.width * ui_state.tile_size;
-		let length = self.digits.len();
-		for (x, digit) in self.digits.iter().enumerate() {
-			let (pos_x, pos_y) = ui_state.pixel_screen_offset(WIDTH * x + board_width - WIDTH * (length + 2), (top - HEIGHT) / 2);
-			widgets::Texture::new(textures.numbers[*digit])
-				.size(scaled_width, scaled_height)
-				.position(vec2(pos_x, pos_y))
-				.ui(ui);
-		}
+
+		draw_seven_segment(
+			ui_state,
+			ui,
+			textures,
+			&self.digits,
+			board_width - seven_segment::WIDTH * (self.digits.len() + 2),
+			(ui_state.top_offset - seven_segment::HEIGHT) / 2,
+		);
 	}
 }

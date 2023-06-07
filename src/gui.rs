@@ -1,6 +1,7 @@
 mod board_render;
 mod highlighter;
 pub mod settings_menu;
+mod seven_segment;
 pub mod texture_store;
 mod tile_render;
 pub mod top_menu;
@@ -86,9 +87,6 @@ impl UIState {
 			self.letterbox.1 = 0f32;
 		}
 	}
-}
-
-impl UIState {
 	pub fn pixel_screen_offset(&self, x: usize, y: usize) -> (f32, f32) {
 		let (x, y) = self.pixel_screen_scale(x, y);
 		let x = x + self.letterbox.0;

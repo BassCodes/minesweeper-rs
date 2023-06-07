@@ -1,9 +1,9 @@
-use macroquad::{
-	prelude::*,
-	ui::{widgets, Ui},
-};
+use macroquad::ui::Ui;
 
-use crate::gui::texture_store::TextureStore;
+use crate::gui::{
+	seven_segment::{self, draw_seven_segment},
+	texture_store::TextureStore,
+};
 
 use super::UIState;
 
@@ -33,18 +33,13 @@ impl GUIFlagCounter {
 			self.old_count = remaining;
 		}
 
-		let top = ui_state.top_offset;
-		const WIDTH: usize = 13 * 2;
-		const HEIGHT: usize = 23 * 2;
-		let (scaled_width, scaled_height) = ui_state.pixel_screen_scale(WIDTH, HEIGHT);
-
-		// let length = self.digits.len() as f32;
-		for (x, digit) in self.digits.iter().enumerate() {
-			let (pos_x, pos_y) = ui_state.pixel_screen_offset((x + 2) * WIDTH, (top - HEIGHT) / 2);
-			widgets::Texture::new(textures.numbers[*digit])
-				.size(scaled_width, scaled_height)
-				.position(vec2(pos_x, pos_y))
-				.ui(ui);
-		}
+		draw_seven_segment(
+			ui_state,
+			ui,
+			textures,
+			&self.digits,
+			seven_segment::WIDTH * 2,
+			(ui_state.top_offset - seven_segment::HEIGHT) / 2,
+		);
 	}
 }

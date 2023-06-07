@@ -26,30 +26,30 @@ pub enum Highlight {
 	Wide,
 }
 
+// The highlighter is responsible for the selection when a tile is clicked and held either with left or middle click
 impl Highlighter {
 	pub fn events(&mut self, ui_state: &UIState, event_handler: &mut Events<GUIEvent>, game_board: &mut GameBoard) {
-		if !ui_state.frozen && ui_state.mouse_in_minefield {
-			if is_mouse_button_pressed(MouseButton::Left) {
-				self.highlight = Highlight::Normal;
+		if !ui_state.frozen {
+			if ui_state.mouse_in_minefield {
+				if is_mouse_button_pressed(MouseButton::Left) {
+					self.highlight = Highlight::Normal;
+				}
+				if is_mouse_button_pressed(MouseButton::Middle) {
+					self.highlight = Highlight::Wide;
+					self.check_reveal(event_handler, ui_state, game_board)
+				}
 			}
-			if is_mouse_button_pressed(MouseButton::Middle) {
-				self.highlight = Highlight::Wide;
-				self.check_reveal(event_handler, ui_state, game_board)
-			}
-		}
-		if is_mouse_button_released(MouseButton::Left) {
-			self.reset_highlight(ui_state, event_handler);
-			if !ui_state.frozen {
+			if is_mouse_button_released(MouseButton::Left) {
+				self.reset_highlight(ui_state, event_handler);
 				event_handler.add(GUIEvent::SetSmileyState(SmileyState::Chillin));
 			}
-		}
-		if is_mouse_button_released(MouseButton::Middle) {
-			self.reset_highlight(ui_state, event_handler);
-			if !ui_state.frozen {
+			if is_mouse_button_released(MouseButton::Middle) {
+				self.reset_highlight(ui_state, event_handler);
 				event_handler.add(GUIEvent::SetSmileyState(SmileyState::Chillin));
 			}
 		}
 	}
+
 	fn check_reveal(&self, event_handler: &mut Events<GUIEvent>, interface: &UIState, game_board: &mut GameBoard) {
 		let (x, y) = interface.cursor;
 		if let Some(tile) = game_board.get_tile_mut(x, y) {

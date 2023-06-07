@@ -22,12 +22,12 @@ impl Default for TextureStore {
 impl TextureStore {
 	pub fn new() -> Self {
 		Self {
-			numbers: load_sprites(include_bytes!("../../assets/numbers.png"), [26, 46], 1, 10).expect("Could not load sprites"),
-			english_tiles: load_sprites(include_bytes!("../../assets/english_32x.png"), [32, 32], 2, 8)
+			numbers: load_sprites(include_bytes!("../../assets/numbers.png"), (26, 46), 1, 10).expect("Could not load sprites"),
+			english_tiles: load_sprites(include_bytes!("../../assets/english_32x.png"), (32, 32), 2, 8)
 				.expect("Could not load Tile Sprites"),
-			japanese_tiles: load_sprites(include_bytes!("../../assets/japanese_32x.png"), [32, 32], 2, 8)
+			japanese_tiles: load_sprites(include_bytes!("../../assets/japanese_32x.png"), (32, 32), 2, 8)
 				.expect("Could not load Tile Sprites"),
-			smilies: load_sprites(include_bytes!("../../assets/faces.png"), [48, 48], 1, 5).expect("Could not load face sprites"),
+			smilies: load_sprites(include_bytes!("../../assets/faces.png"), (48, 48), 1, 5).expect("Could not load face sprites"),
 			cog: Texture2D::from_file_with_format(include_bytes!("../../assets/cog.png"), Some(ImageFormat::Png)),
 			lang: Language::English,
 		}
