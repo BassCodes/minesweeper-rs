@@ -109,11 +109,11 @@ impl GameBoard {
 						self.flags -= 1;
 						match self.modify_mode {
 							ModifyMode::Flag => {
-								event_handler.add(GameEvent::FlagTile(x, y, tile.clone()));
+								event_handler.add(GameEvent::FlagTile(x, y, tile));
 								None
 							}
 							ModifyMode::Question => {
-								event_handler.add(GameEvent::QuestionTile(x, y, tile.clone()));
+								event_handler.add(GameEvent::QuestionTile(x, y, tile));
 
 								Some(TileModifier::Unsure)
 							}
@@ -123,7 +123,7 @@ impl GameBoard {
 				}
 			} else {
 				self.flags += 1;
-				event_handler.add(GameEvent::FlagTile(x, y, tile.clone()));
+				event_handler.add(GameEvent::FlagTile(x, y, tile));
 				Some(TileModifier::Flagged)
 			};
 			if let Some(tile) = self.get_tile_mut(x, y) {
@@ -136,8 +136,8 @@ impl GameBoard {
 		if let BoardState::Ungenerated = self.state {
 			self.generate(x, y);
 		}
-		let &tile = &self.tiles[x][y];
-		if let Some(_) = tile.modifier {
+		let tile = self.tiles[x][y];
+		if tile.modifier.is_some() {
 			return None;
 		}
 		if tile.swept {
@@ -145,10 +145,10 @@ impl GameBoard {
 		}
 		self.tiles[x][y].swept = true;
 		self.revealed_tiles += 1;
-		event_handler.add(GameEvent::RevealTile(x, y, self.tiles[x][y].clone()));
+		event_handler.add(GameEvent::RevealTile(x, y, self.tiles[x][y]));
 
 		if tile.state == TileState::Mine {
-			event_handler.add(GameEvent::Lose(x, y, tile.clone()));
+			event_handler.add(GameEvent::Lose(x, y, tile));
 
 			event_handler.add(GameEvent::GameEnd(self.clone()));
 			return Some(GameState::GameOver);
@@ -157,7 +157,7 @@ impl GameBoard {
 
 		let mut scan_list = VecDeque::from([(x, y)]);
 		let mut revealed: usize = 0;
-		while scan_list.len() > 0 {
+		while !scan_list.is_empty() {
 			for &scan_location in ADJACENT_WITHOUT_CENTER.iter() {
 				if let Some((x, y)) = scan_list.front() {
 					if let Some(old_tile) = self.get_tile(*x, *y) {
@@ -179,7 +179,7 @@ impl GameBoard {
 							scan_list.push_back((x, y));
 							tile.swept = true;
 							revealed += 1;
-							event_handler.add(GameEvent::RevealTile(x, y, tile.clone()));
+							event_handler.add(GameEvent::RevealTile(x, y, *tile));
 						}
 					}
 				}
@@ -226,7 +226,7 @@ impl GameBoard {
 			let y = macroquad::rand::gen_range(0, height);
 			let mut tile = &mut self.tiles[x][y];
 
-			if tile.state == TileState::Mine || tile.safe == true {
+			if tile.state == TileState::Mine || tile.safe {
 				continue;
 			}
 

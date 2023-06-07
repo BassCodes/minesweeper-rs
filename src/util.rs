@@ -25,7 +25,7 @@ impl<E> Events<E> {
 	}
 
 	pub fn next(&mut self) -> Option<E> {
-		if self.events.len() > 0 {
+		if !self.events.is_empty() {
 			self.events.pop()
 		} else {
 			None

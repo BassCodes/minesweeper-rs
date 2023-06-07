@@ -54,7 +54,7 @@ impl GUITop {
 				const HEIGHT: usize = 35;
 				let pos_y = (ui_state.top_offset - HEIGHT) / 2;
 				let pos_x = (13 * 2 * 2 - WIDTH) / 2;
-				let (scaled_width, scaled_height) = ui_state.pixel_screen_scale(WIDTH as usize, HEIGHT);
+				let (scaled_width, scaled_height) = ui_state.pixel_screen_scale(WIDTH, HEIGHT);
 				let (pos_x, pos_y) = ui_state.pixel_screen_offset(pos_x, pos_y);
 				if widgets::Button::new(textures.cog)
 					.size(vec2(scaled_width, scaled_height))
@@ -69,9 +69,9 @@ impl GUITop {
 				}
 			}
 
-			self.timer.render(&ui_state, game_logic.get_time(), ui, &textures);
-			self.smile.render(&ui_state, ui, event_handler, &textures);
-			self.flag_counter.render(&ui_state, game_logic.board.remaining_flags(), ui, &textures);
+			self.timer.render(ui_state, game_logic.get_time(), ui, textures);
+			self.smile.render(ui_state, ui, event_handler, textures);
+			self.flag_counter.render(ui_state, game_logic.board.remaining_flags(), ui, textures);
 		});
 	}
 }

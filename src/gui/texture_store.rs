@@ -33,9 +33,9 @@ impl TextureStore {
 		}
 	}
 	pub fn get_tiles(&self) -> &Vec<Texture2D> {
-		return match self.lang {
+		match self.lang {
 			Language::English => &self.english_tiles,
 			Language::Japanese => &self.japanese_tiles,
-		};
+		}
 	}
 }

@@ -53,13 +53,13 @@ pub struct UIState {
 }
 impl UIState {
 	pub fn new(width: usize, height: usize, tile_size: usize, top_offset: usize) -> Self {
-		return Self {
+		Self {
 			width,
 			height,
 			tile_size,
 			top_offset,
 			..Default::default()
-		};
+		}
 	}
 	pub fn update_dimensions(&mut self, width: usize, height: usize) {
 		self.width = width;
@@ -91,12 +91,12 @@ impl UIState {
 		let (x, y) = self.pixel_screen_scale(x, y);
 		let x = x + self.letterbox.0;
 		let y = y + self.letterbox.1;
-		return (x, y);
+		(x, y)
 	}
 	pub fn pixel_screen_scale(&self, x: usize, y: usize) -> (f32, f32) {
 		let x = x as f32;
 		let y = y as f32;
-		return (x * self.scale, y * self.scale);
+		(x * self.scale, y * self.scale)
 	}
 }
 
@@ -113,10 +113,10 @@ pub struct GameUI {
 impl GameUI {
 	pub fn new(settings: UIState) -> Self {
 		let set = settings;
-		return Self {
+		Self {
 			state: set,
 			..Default::default()
-		};
+		}
 	}
 	pub fn is_valid_position(&self, x: usize, y: usize) -> bool {
 		if x < self.state.width && y < self.state.height {
@@ -145,6 +145,6 @@ impl GameUI {
 		if !self.is_valid_position(x, y) {
 			return None;
 		}
-		return Some((x, y));
+		Some((x, y))
 	}
 }

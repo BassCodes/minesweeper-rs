@@ -27,7 +27,7 @@ impl Tile {
 		}
 	}
 	pub fn highlight(&mut self) {
-		if self.swept == false {
+		if !self.swept {
 			self.highlighted = true;
 		}
 	}

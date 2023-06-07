@@ -12,8 +12,8 @@ mod sprite_loader;
 mod util;
 
 fn main() {
-	let width = (30 * 32) as i32;
-	let height = (16 * 32) as i32 + 100;
+	let width = 30 * 32;
+	let height = 16 * 32 + 100;
 	Window::from_config(
 		Conf {
 			sample_count: 2,

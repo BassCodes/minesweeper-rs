@@ -26,11 +26,7 @@ impl Timer {
 		if let TimerState::Frozen = self.state {
 			return Some(self.old);
 		}
-		if let Some(time) = self.start_time {
-			Some(get_time() - time)
-		} else {
-			None
-		}
+		self.start_time.map(|time| get_time() - time)
 	}
 	pub fn stop(&mut self) {
 		self.old = self.elapsed().unwrap_or(0f64);

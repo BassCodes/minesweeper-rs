@@ -82,7 +82,7 @@ impl Minesweeper {
 		self.board.modify(x, y, &mut self.events)
 	}
 	pub fn get_time(&self) -> Option<f64> {
-		return self.timer.elapsed();
+		self.timer.elapsed()
 	}
 	pub fn highlight(&mut self, x: usize, y: usize) {
 		if self.state == GameState::Playing || self.state == GameState::Empty {

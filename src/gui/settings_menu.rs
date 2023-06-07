@@ -51,18 +51,18 @@ impl SettingsMenu {
 
 		root_ui().window(hash!(), vec2(0., 0.), vec2(screen_width, screen_height), |ui| {
 			draw_rectangle(0f32, 0f32, screen_width, screen_height, background_color);
-			ui.push_skin(&exit_button_skin);
+			ui.push_skin(exit_button_skin);
 			if widgets::Button::new("").size(vec2(50.0, 50.0)).position(vec2(0f32, 0f32)).ui(ui) {
 				event_handler.add(GUIEvent::CloseSettings)
 			}
 			ui.pop_skin();
-			ui.push_skin(&skin);
+			ui.push_skin(skin);
 			let half_screen_width = screen_width * 0.5;
 
 			render_counter(
 				&mut self.width,
 				ui,
-				&textures,
+				textures,
 				vec2(half_screen_width, 100f32),
 				"Minefield Width",
 				MIN_MINEFIELD_WIDTH,
@@ -71,7 +71,7 @@ impl SettingsMenu {
 			render_counter(
 				&mut self.height,
 				ui,
-				&textures,
+				textures,
 				vec2(half_screen_width, 200f32),
 				"Minefield Height",
 				MIN_MINEFIELD_HEIGHT,
@@ -80,7 +80,7 @@ impl SettingsMenu {
 			render_counter(
 				&mut self.mines,
 				ui,
-				&textures,
+				textures,
 				vec2(half_screen_width, 300f32),
 				"Mines",
 				1,
@@ -113,14 +113,12 @@ impl SettingsMenu {
 				{
 					event_handler.add(GUIEvent::SwitchLanguage(Language::Japanese));
 				}
-			} else {
-				if widgets::Button::new("Japanese")
-					.size(vec2(BUTTON_SIZE, BUTTON_SIZE))
-					.position(vec2(language_button_x, BUTTON_MENU_Y))
-					.ui(ui)
-				{
-					event_handler.add(GUIEvent::SwitchLanguage(Language::English));
-				}
+			} else if widgets::Button::new("Japanese")
+				.size(vec2(BUTTON_SIZE, BUTTON_SIZE))
+				.position(vec2(language_button_x, BUTTON_MENU_Y))
+				.ui(ui)
+			{
+				event_handler.add(GUIEvent::SwitchLanguage(Language::English));
 			}
 			if let ModifyMode::Question = self.board_modify_mode {
 				if widgets::Button::new("ON")
@@ -131,15 +129,13 @@ impl SettingsMenu {
 					self.board_modify_mode = ModifyMode::Flag;
 					event_handler.add(GUIEvent::SetQuestionMode(ModifyMode::Flag));
 				}
-			} else {
-				if widgets::Button::new("OFF")
-					.size(vec2(BUTTON_SIZE, BUTTON_SIZE))
-					.position(vec2(question_button_x, BUTTON_MENU_Y))
-					.ui(ui)
-				{
-					self.board_modify_mode = ModifyMode::Question;
-					event_handler.add(GUIEvent::SetQuestionMode(ModifyMode::Question));
-				}
+			} else if widgets::Button::new("OFF")
+				.size(vec2(BUTTON_SIZE, BUTTON_SIZE))
+				.position(vec2(question_button_x, BUTTON_MENU_Y))
+				.ui(ui)
+			{
+				self.board_modify_mode = ModifyMode::Question;
+				event_handler.add(GUIEvent::SetQuestionMode(ModifyMode::Question));
 			}
 		});
 	}
@@ -172,11 +168,9 @@ fn render_counter(count: &mut usize, ui: &mut Ui, textures: &TextureStore, posit
 	if widgets::Button::new("-")
 		.size(vec2(COUNTER_BUTTON_HEIGHT, COUNTER_BUTTON_HEIGHT))
 		.position(position - vec2(COUNTER_BUTTON_HEIGHT + COUNTER_BUTTON_MARGIN, -BUTTON_OFFSET_HEIGHT))
-		.ui(ui)
+		.ui(ui) && *count > min
 	{
-		if *count > min {
-			*count -= 1;
-		}
+		*count -= 1;
 	}
 	if widgets::Button::new("++")
 		.size(vec2(COUNTER_BUTTON_HEIGHT, COUNTER_BUTTON_HEIGHT))

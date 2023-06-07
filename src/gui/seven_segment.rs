@@ -7,9 +7,9 @@ pub const HEIGHT: usize = 23 * 2;
 
 use super::{texture_store::TextureStore, UIState};
 
-pub fn draw_seven_segment(ui_state: &UIState, ui: &mut Ui, textures: &TextureStore, val: &Vec<usize>, x: usize, y: usize) {
+pub fn draw_seven_segment(ui_state: &UIState, ui: &mut Ui, textures: &TextureStore, val: &[usize], x: usize, y: usize) {
 	for (n, digit) in val.iter().enumerate() {
-		let (scaled_width, scaled_height) = ui_state.pixel_screen_scale(WIDTH as usize, HEIGHT);
+		let (scaled_width, scaled_height) = ui_state.pixel_screen_scale(WIDTH, HEIGHT);
 		let (pos_x, pos_y) = ui_state.pixel_screen_offset(n * WIDTH + x, y);
 
 		widgets::Texture::new(textures.numbers[*digit])
@@ -19,7 +19,7 @@ pub fn draw_seven_segment(ui_state: &UIState, ui: &mut Ui, textures: &TextureSto
 	}
 }
 
-pub fn draw_seven_segment_unscaled(ui: &mut Ui, textures: &TextureStore, val: &Vec<usize>, x: usize, y: usize) {
+pub fn draw_seven_segment_unscaled(ui: &mut Ui, textures: &TextureStore, val: &[usize], x: usize, y: usize) {
 	for (n, digit) in val.iter().enumerate() {
 		let (pos_x, pos_y) = ((n * WIDTH + x) as f32, y as f32);
 

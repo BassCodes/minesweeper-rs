@@ -117,7 +117,7 @@ impl Highlighter {
 			}
 		}
 
-		self.move_highlight(&interface, event_handler);
+		self.move_highlight(interface, event_handler);
 	}
 
 	fn move_highlight(&mut self, interface: &UIState, event_handler: &mut Events<GUIEvent>) {
